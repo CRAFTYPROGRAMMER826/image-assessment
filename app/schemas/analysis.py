@@ -25,6 +25,7 @@ class AnalysisSummary(BaseModel):
 class AnalysisResponse(AnalysisSummary):
     issues: list[Issue]
     statistics: dict[str, float]
+    quality_summary: list[str]
     explanations: list[str]
 
 
@@ -32,3 +33,4 @@ class HealthResponse(BaseModel):
     status: str
     model_loaded: bool
     model_version: str | None
+    history_persistent: bool

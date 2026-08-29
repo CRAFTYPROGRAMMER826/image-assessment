@@ -25,6 +25,7 @@ function renderResult(data) {
   document.querySelector('#result').hidden = false;
   document.querySelector('#label').textContent = data.quality_label.replaceAll('_', ' ');
   document.querySelector('#score').textContent = Math.round(data.quality_score);
+  document.querySelector('#quality-summary').innerHTML = data.quality_summary.map(value => `<p>${escapeHtml(value)}</p>`).join('');
   document.querySelector('#issues').innerHTML = data.issues.map(issue => `<article class="issue ${issue.detected ? 'detected' : ''}"><strong>${title(issue.type)}</strong><p>${issue.detected ? issue.severity : 'not detected'} · ${(issue.confidence*100).toFixed(0)}%</p></article>`).join('');
   document.querySelector('#explanations').innerHTML = data.explanations.map(value => `<li>${escapeHtml(value)}</li>`).join('');
   document.querySelector('#statistics').innerHTML = Object.entries(data.statistics).map(([key,value]) => `<div class="stat"><span>${title(key)}</span><strong>${Number(value).toFixed(3)}</strong></div>`).join('');

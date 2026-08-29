@@ -8,6 +8,8 @@ The repository now contains a real trained artifact at `models/image_quality_rf.
 
 One FastAPI process serves the REST API and static frontend. OpenCV extracts 19 interpretable sharpness, exposure, contrast, noise, texture, and colour features. A scikit-learn multi-output Random Forest produces five independent issue probabilities. An Isolation Forest fitted only to clean training rows produces the **potential visual defect/anomaly** signal; it must not be interpreted as proof that an object is physically defective.
 
+The Random Forest and Isolation Forest are the learned AI/ML decision components. OpenCV measurements alone do not determine the issue labels: the Random Forest learns multilabel relationships between all 19 measurements and synthetic training targets, then returns probabilities for blur, underexposure, overexposure, noise, and severe degradation.
+
 The final 0–100 score is not presented as a learned prediction. It is a transparent probability-weighted penalty using weights in `app/core/scoring.py`. Random-Forest probabilities are converted to detections using per-target thresholds tuned on the validation split.
 
 ## Quick start
@@ -88,6 +90,21 @@ docker run --rm -p 8000:8000 -v image-quality-data:/app/data image-quality-asses
 ```
 
 Open <http://localhost:8000>. The named volume persists SQLite history. Configuration variables are `MODEL_PATH` and `DATABASE_PATH`.
+
+## Vercel demo deployment
+
+Vercel can host the Python 3.12 FastAPI application and bundled model using the root `index.py` entrypoint. Training data, training code, tests, samples, and evaluation files are excluded from the function bundle by `vercel.json`.
+
+```bash
+npx vercel login
+npx vercel deploy
+```
+
+Important differences from the local/Docker deployment:
+
+- Vercel limits a function request body to 4.5 MB, so this application uses a conservative 4 MiB upload limit there.
+- Vercel provides only read-only files plus temporary `/tmp` storage. The application uses `/tmp/image-quality-app.db`, so Vercel history can disappear after a cold start or run on a different instance.
+- Therefore the Vercel target is a public inference demo, not the assessment's persistence proof. Use Docker with its named volume for the complete reproducible submission workflow, or add an external durable database in a later deployment iteration.
 
 ## Explainability and limitations
 

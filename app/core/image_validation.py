@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import os
+
 import cv2
 import numpy as np
 
 ALLOWED_CONTENT_TYPES = {"image/jpeg", "image/png"}
-MAX_UPLOAD_BYTES = 10 * 1024 * 1024
+MAX_UPLOAD_BYTES = (4 if os.getenv("VERCEL") else 10) * 1024 * 1024
 MIN_DIMENSION = 16
 MAX_PIXELS = 40_000_000
 

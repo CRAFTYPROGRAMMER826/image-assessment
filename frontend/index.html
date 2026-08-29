@@ -10,16 +10,32 @@
   <main>
     <header><p class="eyebrow">Hybrid CV + classical ML</p><h1>Image quality assessment</h1><p>Upload one JPEG or PNG to inspect quality, degradation, and potential visual anomalies.</p></header>
     <section class="panel upload-panel">
-      <label class="drop" for="file"><span>Select an image</span><small>JPEG or PNG, up to 10 MiB</small><input id="file" type="file" accept="image/jpeg,image/png"></label>
+      <label class="drop" for="file"><span>Select an image</span><small>JPEG or PNG · 10 MiB locally / 4 MiB on Vercel</small><input id="file" type="file" accept="image/jpeg,image/png"></label>
       <img id="preview" alt="Selected image preview" hidden>
       <button id="analyze" disabled>Analyze image</button>
       <p id="status" role="status"></p>
     </section>
     <section id="result" class="panel" hidden>
       <div class="score-row"><div><p class="eyebrow">Overall result</p><h2 id="label"></h2></div><div id="score" class="score"></div></div>
+      <div id="quality-summary" class="quality-summary"></div>
       <h3>Detected conditions</h3><div id="issues" class="issue-grid"></div>
       <h3>Why this result?</h3><ul id="explanations"></ul>
       <details><summary>Image statistics</summary><div id="statistics" class="stats"></div></details>
+    </section>
+    <section class="panel glossary">
+      <p class="eyebrow">Plain-English guide</p>
+      <h2>New to computer vision terms? Don’t fumble—we’ve got your back.</h2>
+      <p class="muted">No single number decides whether an image is good. The learned model considers these measurements together and in the context of its training examples.</p>
+      <div class="glossary-grid">
+        <article><h3>Sharpness</h3><p><strong>Laplacian variance</strong> and <strong>Tenengrad</strong> measure how crisp edges and fine details are. Lower values often indicate blur, although intentionally smooth scenes can also be low.</p></article>
+        <article><h3>Edges and fine detail</h3><p><strong>Edge density</strong> is how much of the image contains visible boundaries. <strong>High-frequency energy</strong> measures tiny changes; detail and noise can both raise it.</p></article>
+        <article><h3>Brightness</h3><p><strong>Mean luminance</strong> is average brightness from 0 (black) to 255 (white). Dark or bright alone is not a fault—the model also checks whether detail has been lost.</p></article>
+        <article><h3>Clipping</h3><p><strong>Black/white clip ratios</strong> show the share of pixels crushed to near-black or blown to near-white. High clipping means shadow or highlight detail may be unrecoverable.</p></article>
+        <article><h3>Contrast and tonal range</h3><p><strong>RMS contrast</strong> describes the spread between light and dark pixels. <strong>Dynamic range</strong> shows how much of the 0–255 brightness scale the image uses.</p></article>
+        <article><h3>Noise</h3><p><strong>Noise sigma</strong> estimates random grain after separating smoother content. <strong>Local variance</strong> measures small-area intensity changes, which may come from texture or noise.</p></article>
+        <article><h3>Information and gradients</h3><p><strong>Entropy</strong> measures visual information or variety. <strong>Gradient mean/std</strong> describe how strongly and how unevenly brightness changes across the image.</p></article>
+        <article><h3>Colour</h3><p><strong>Saturation mean/std</strong> describe colour intensity and its variation. A high value means vivid colour—not automatically oversaturation or poor quality.</p></article>
+      </div>
     </section>
     <section class="panel"><div class="section-title"><h2>Recent analyses</h2><button id="refresh" class="secondary">Refresh</button></div><div id="history"></div></section>
   </main>

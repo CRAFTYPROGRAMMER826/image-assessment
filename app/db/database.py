@@ -8,7 +8,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
-DATABASE_PATH = Path(os.getenv("DATABASE_PATH", "data/app.db"))
+default_database_path = "/tmp/image-quality-app.db" if os.getenv("VERCEL") else "data/app.db"
+DATABASE_PATH = Path(os.getenv("DATABASE_PATH", default_database_path))
 DATABASE_PATH.parent.mkdir(parents=True, exist_ok=True)
 DATABASE_URL = f"sqlite:///{DATABASE_PATH}"
 

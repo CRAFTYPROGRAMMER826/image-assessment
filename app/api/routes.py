@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 from fastapi import APIRouter, Depends, File, HTTPException, Request, UploadFile, status
@@ -34,6 +35,28 @@ def _explanations(features: dict[str, float], probabilities: dict[str, float]) -
     return messages
 
 
+def _quality_summary(row: Analysis) -> list[str]:
+    issues = json.loads(row.issues_json)
+    features = json.loads(row.statistics_json)
+    openings = {
+        "ACCEPTABLE": "The image appears suitable for normal use, with no strong quality failure detected.",
+        "DEGRADED": "The image remains usable, but one or more quality problems noticeably reduce its clarity or tonal quality.",
+        "POTENTIALLY_DEFECTIVE": "The image has substantial quality loss or an unusual feature pattern and should be reviewed before use.",
+    }
+    detected = sorted((issue for issue in issues if issue["detected"]), key=lambda issue: issue["confidence"], reverse=True)
+    strongest = max(issues, key=lambda issue: issue["confidence"])
+    if detected:
+        names = ", ".join(issue["type"].replace("_", " ") for issue in detected[:3])
+        decision = f"The model detected {names}; the strongest signal is {strongest['type'].replace('_', ' ')} at {strongest['confidence']:.0%} confidence."
+    else:
+        decision = f"No condition crossed its learned decision threshold; the strongest remaining concern is {strongest['type'].replace('_', ' ')} at {strongest['confidence']:.0%}."
+    tonal = (
+        f"Average brightness is {features['mean_luminance']:.0f}/255, with "
+        f"{features['black_clip_ratio']:.1%} crushed blacks and {features['white_clip_ratio']:.1%} blown highlights."
+    )
+    return [f"Quality score {row.quality_score:.0f}/100. {openings[row.quality_label]}", decision, tonal]
+
+
 def _full_response(row: Analysis) -> AnalysisResponse:
     return AnalysisResponse(
         id=row.id,
@@ -43,6 +66,7 @@ def _full_response(row: Analysis) -> AnalysisResponse:
         created_at=row.created_at,
         issues=json.loads(row.issues_json),
         statistics=json.loads(row.statistics_json),
+        quality_summary=_quality_summary(row),
         explanations=_stored_explanations(row),
     )
 
@@ -60,6 +84,7 @@ def health(request: Request) -> HealthResponse:
         status="ok" if predictor.loaded else "degraded",
         model_loaded=predictor.loaded,
         model_version=predictor.version,
+        history_persistent=not bool(os.getenv("VERCEL")),
     )
 
 
