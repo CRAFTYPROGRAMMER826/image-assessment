@@ -1,0 +1,44 @@
+{
+  "source_directory": "/Users/apple/Desktop/python programs/Image-assessment/val2017",
+  "seed": 42,
+  "variants_per_source": 19,
+  "source_counts": {
+    "train": 3498,
+    "validation": 749,
+    "test": 751
+  },
+  "feature_row_counts": {
+    "train": 66462,
+    "validation": 14231,
+    "test": 14269
+  },
+  "positive_label_counts": {
+    "train": {
+      "blur": 17490,
+      "underexposure": 13992,
+      "overexposure": 13992,
+      "noise": 17490,
+      "severe_degradation": 10494
+    },
+    "validation": {
+      "blur": 3745,
+      "underexposure": 2996,
+      "overexposure": 2996,
+      "noise": 3745,
+      "severe_degradation": 2247
+    },
+    "test": {
+      "blur": 3755,
+      "underexposure": 3004,
+      "overexposure": 3004,
+      "noise": 3755,
+      "severe_degradation": 2253
+    }
+  },
+  "rejected_source_count": 2,
+  "rejection_reasons": {
+    "extreme_black_clipping": 2
+  },
+  "feature_dataset": "/Users/apple/Desktop/python programs/Image-assessment/data/features.csv",
+  "inspection_samples": "/Users/apple/Desktop/python programs/Image-assessment/samples/generated"
+}

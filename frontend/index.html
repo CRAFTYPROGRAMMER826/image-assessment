@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Image Quality Assessment</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <main>
+    <header><p class="eyebrow">Hybrid CV + classical ML</p><h1>Image quality assessment</h1><p>Upload one JPEG or PNG to inspect quality, degradation, and potential visual anomalies.</p></header>
+    <section class="panel upload-panel">
+      <label class="drop" for="file"><span>Select an image</span><small>JPEG or PNG, up to 10 MiB</small><input id="file" type="file" accept="image/jpeg,image/png"></label>
+      <img id="preview" alt="Selected image preview" hidden>
+      <button id="analyze" disabled>Analyze image</button>
+      <p id="status" role="status"></p>
+    </section>
+    <section id="result" class="panel" hidden>
+      <div class="score-row"><div><p class="eyebrow">Overall result</p><h2 id="label"></h2></div><div id="score" class="score"></div></div>
+      <h3>Detected conditions</h3><div id="issues" class="issue-grid"></div>
+      <h3>Why this result?</h3><ul id="explanations"></ul>
+      <details><summary>Image statistics</summary><div id="statistics" class="stats"></div></details>
+    </section>
+    <section class="panel"><div class="section-title"><h2>Recent analyses</h2><button id="refresh" class="secondary">Refresh</button></div><div id="history"></div></section>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>

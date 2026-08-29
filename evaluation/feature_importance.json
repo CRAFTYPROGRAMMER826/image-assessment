@@ -1,0 +1,21 @@
+{
+  "laplacian_variance": 0.1498632020962443,
+  "bright_pixel_ratio": 0.11828625247889066,
+  "noise_sigma_estimate": 0.11107159505573687,
+  "white_clip_ratio": 0.1091864365583876,
+  "high_frequency_energy": 0.10841229961774579,
+  "dynamic_range": 0.05550940219074261,
+  "mean_luminance": 0.053969651427914565,
+  "gradient_mean": 0.04100794915496967,
+  "gradient_std": 0.04009112896384854,
+  "entropy": 0.031626568948659436,
+  "rms_contrast": 0.03001522197217522,
+  "local_variance_mean": 0.028116773687671577,
+  "edge_density": 0.0273480549168017,
+  "tenengrad_score": 0.025734513075531634,
+  "std_luminance": 0.024294472533468545,
+  "dark_pixel_ratio": 0.014296685767821676,
+  "mean_saturation": 0.013091439591012947,
+  "black_clip_ratio": 0.012571038563745926,
+  "saturation_std": 0.0055073133986306266
+}
