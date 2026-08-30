@@ -83,6 +83,8 @@ score = clamp(100 - sum(issue_probability x issue_penalty), 0, 100)
 
 Blur, underexposure, and overexposure each carry a maximum 20-point penalty; noise 15; severe degradation 25; and anomaly 20. Labels are `ACCEPTABLE` at 80+, `DEGRADED` at 50-79.9, and `POTENTIALLY_DEFECTIVE` below 50. These weights and severity bands are explainable policy choices in `app/core/scoring.py`, not scientific constants.
 
+The visitor-facing guide at `/scoring` explains confidence, severity, score deductions, and status with a worked example. In particular, issue confidences are independent multilabel probabilities—not percentages of damaged pixels—and may legitimately total more than 100%.
+
 ## Training methodology
 
 ### Source data and leakage control

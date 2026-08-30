@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scoring Guide · Image Quality Assessment</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <main class="doc-page">
+    <a class="back-link" href="/">← Back to image analysis</a>
+    <header>
+      <p class="eyebrow">First-time visitor guide</p>
+      <h1>How to read your image-quality result</h1>
+      <p>The score, issue percentages, severity, and status answer different questions. This guide explains each one and shows exactly how the current scoring system combines them.</p>
+    </header>
+
+    <section>
+      <h2>The four numbers you are seeing</h2>
+      <table>
+        <thead><tr><th>Display</th><th>What it means</th><th>What it does not mean</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Issue confidence</strong></td><td>How strongly the learned model believes an issue is present.</td><td>It is not the percentage of pixels affected.</td></tr>
+          <tr><td><strong>Severity</strong></td><td>An application band—low, medium, or high—assigned after detection.</td><td>It is not a separate model or physical measurement.</td></tr>
+          <tr><td><strong>Quality score</strong></td><td>Estimated quality retained after weighted deductions from 100.</td><td>It is not the model's confidence that the image is “good.”</td></tr>
+          <tr><td><strong>Status</strong></td><td>A label derived from the final score.</td><td>It is not an independent prediction.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Why issue percentages can exceed 100% together</h2>
+      <p>Blur, noise, and underexposure are independent, coexisting conditions. A result can therefore be 90% confident in blur and 80% confident in noise at the same time. The values are not slices of a pie and must not be added as pixel coverage.</p>
+      <div class="callout"><strong>Think of weather:</strong> it can be 90% likely to rain, 80% likely to be windy, and 70% likely to be cold. Those events can all occur together.</div>
+      <p>The confidence bars on the analysis page are deliberately separate. A stacked 100% confidence bar would falsely imply that the issues are mutually exclusive.</p>
+    </section>
+
+    <section>
+      <h2>How the overall score is calculated</h2>
+      <p>The learned models output issue probabilities. A transparent application layer converts them into point deductions:</p>
+      <div class="formula">score = clamp(100 − Σ(issue probability × maximum penalty), 0, 100)</div>
+      <table>
+        <thead><tr><th>Issue</th><th>Maximum deduction</th></tr></thead>
+        <tbody>
+          <tr><td>Blur</td><td>20 points</td></tr>
+          <tr><td>Underexposure</td><td>20 points</td></tr>
+          <tr><td>Overexposure</td><td>20 points</td></tr>
+          <tr><td>Noise</td><td>15 points</td></tr>
+          <tr><td>Severe degradation</td><td>25 points</td></tr>
+          <tr><td>Potential visual anomaly</td><td>20 points</td></tr>
+        </tbody>
+      </table>
+      <div class="callout warning"><strong>Important:</strong> probabilities below their detection threshold still make a smaller score deduction. This keeps the score gradual instead of jumping abruptly at a threshold.</div>
+    </section>
+
+    <section>
+      <h2>Worked example: why 99% blur may still score around 77</h2>
+      <p>Issue confidence controls only a fraction of that issue's maximum penalty. A 99% blur probability removes about 19.8 points—not 99 points.</p>
+      <div class="example-ledger">
+        <span>Blur: 99% × 20</span><strong>−19.80</strong>
+        <span>Overexposure: 10% × 20</span><strong>−2.00</strong>
+        <span>Noise: 5% × 15</span><strong>−0.75</strong>
+        <span>Severe degradation: 2% × 25</span><strong>−0.50</strong>
+        <span class="total">Total deduction</span><strong class="total">−23.05</strong>
+        <span class="total">Quality retained</span><strong class="total">76.95 ≈ 77</strong>
+      </div>
+      <p>The image is labelled <strong>DEGRADED</strong> because 77 falls inside the degraded score band, even though blur itself has 99% confidence.</p>
+    </section>
+
+    <section>
+      <h2>Score bands and severity bands</h2>
+      <table>
+        <thead><tr><th>Overall score</th><th>Status</th></tr></thead>
+        <tbody><tr><td>80–100</td><td>ACCEPTABLE</td></tr><tr><td>50–79.9</td><td>DEGRADED</td></tr><tr><td>0–49.9</td><td>POTENTIALLY_DEFECTIVE</td></tr></tbody>
+      </table>
+      <p>For detected issues, confidence below 70% is shown as low severity, 70–84% as medium, and 85%+ as high. Detection thresholds are target-specific and were selected using validation data; therefore “not detected” does not necessarily mean 0% confidence.</p>
+    </section>
+
+    <section>
+      <h2>Does the model know which pixels are wrong?</h2>
+      <p>No. The current model classifies the complete image using 19 global statistics. It can say that the overall feature pattern resembles blur, noise, or exposure damage, but it cannot claim that a specific percentage of pixels is defective or identify a defective region.</p>
+      <p>Pixel- or region-level statements would require a separately trained patch-localization or segmentation system. Exposure clipping ratios are genuine pixel proportions, but issue confidence values are not.</p>
+    </section>
+
+    <section>
+      <h2>A practical reading order</h2>
+      <ol>
+        <li>Start with the overall score and status to understand general usability.</li>
+        <li>Look for issue cards marked <strong>detected</strong>.</li>
+        <li>Use confidence to judge model certainty and severity to understand the display band.</li>
+        <li>Read “Why this result?” and the plain-English summary for supporting measurements.</li>
+        <li>Treat borderline results as review prompts, especially for intentionally dark, bright, grainy, or shallow-depth-of-field photography.</li>
+      </ol>
+    </section>
+
+    <section class="callout">
+      <h2>One final rule of thumb</h2>
+      <p><strong>Confidence answers “how sure?”, score answers “how usable overall?”, and clipping ratios answer “how many pixels?”.</strong> They are related, but they are not interchangeable.</p>
+    </section>
+
+    <a class="button-link" href="/">Analyze an image</a>
+  </main>
+</body>
+</html>
