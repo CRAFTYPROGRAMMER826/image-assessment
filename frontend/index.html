@@ -17,10 +17,17 @@
     </section>
     <section id="result" class="panel" hidden>
       <div class="score-row"><div><p class="eyebrow">Overall result</p><h2 id="label"></h2></div><div id="score" class="score"></div></div>
+      <p class="interpretation-note"><strong>The score is retained overall quality, not model confidence.</strong> It starts at 100 and falls through probability-weighted issue deductions.</p>
       <div id="quality-summary" class="quality-summary"></div>
-      <h3>Detected conditions</h3><div id="issues" class="issue-grid"></div>
+      <h3>Detected conditions</h3>
+      <p class="interpretation-note"><strong>Issue percentages are independent confidence estimates—not percentages of damaged pixels.</strong> They can total more than 100% because blur, noise, and exposure problems may coexist.</p>
+      <div id="issues" class="issue-grid"></div>
       <h3>Why this result?</h3><ul id="explanations"></ul>
       <details><summary>Image statistics</summary><div id="statistics" class="stats"></div></details>
+      <aside class="docs-cta">
+        <div><p class="eyebrow">Need the full calculation?</p><h3>Still confused? Take a look at the scoring system docs.</h3><p>See the formula, weights, thresholds, worked examples, and answers to common first-time questions.</p></div>
+        <a class="button-link" href="/scoring">Open scoring guide</a>
+      </aside>
     </section>
     <section class="panel glossary">
       <p class="eyebrow">Plain-English guide</p>
@@ -36,6 +43,7 @@
         <article><h3>Information and gradients</h3><p><strong>Entropy</strong> measures visual information or variety. <strong>Gradient mean/std</strong> describe how strongly and how unevenly brightness changes across the image.</p></article>
         <article><h3>Colour</h3><p><strong>Saturation mean/std</strong> describe colour intensity and its variation. A high value means vivid colour—not automatically oversaturation or poor quality.</p></article>
       </div>
+      <p class="center-link"><a href="/scoring">Read the complete scoring and confidence guide →</a></p>
     </section>
     <section class="panel"><div class="section-title"><h2>Recent analyses</h2><button id="refresh" class="secondary">Refresh</button></div><div id="history"></div></section>
   </main>

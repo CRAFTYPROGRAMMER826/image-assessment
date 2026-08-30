@@ -39,3 +39,9 @@ app.mount("/static", StaticFiles(directory=FRONTEND), name="static")
 @app.get("/", include_in_schema=False)
 def index() -> FileResponse:
     return FileResponse(FRONTEND / "index.html")
+
+
+@app.get("/scoring", include_in_schema=False)
+@app.get("/scoring/", include_in_schema=False)
+def scoring_guide() -> FileResponse:
+    return FileResponse(FRONTEND / "scoring.html")

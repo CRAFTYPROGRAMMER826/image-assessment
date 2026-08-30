@@ -25,6 +25,13 @@ def test_unsupported_upload_type():
         assert response.status_code == 415
 
 
+def test_scoring_guide_is_served():
+    with TestClient(app) as client:
+        response = client.get("/scoring")
+        assert response.status_code == 200
+        assert "How to read your image-quality result" in response.text
+
+
 def test_analysis_includes_plain_english_summary_when_model_exists():
     model = Path("models/image_quality_rf.joblib")
     sample = Path("samples/generated/clean.jpg")
